@@ -8,7 +8,9 @@ class DFA : protected FiniteAutomata {
     using FiniteAutomata::FiniteAutomata;
 
 private:
-    std::vector<std::pair<std::string, int>> depth_limited_first_search(int max_depth);
+    std::vector<std::string> depth_limited_first_search(int max_depth);
+
+    std::vector<std::string> breadth_first_search();
 
 public:
 
@@ -18,7 +20,9 @@ public:
 
     bool is_string_accepted(std::string const &_string);
 
-    std::vector<std::string> strings_accepted(int _string_length);
+    std::vector<std::string> specific_length_strings(int _string_length);
+
+    std::vector<std::string> strings_accepted();
 };
 
 #endif

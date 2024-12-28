@@ -2,8 +2,8 @@
 #include <deque>
 #include <algorithm>
 
-std::vector<std::pair<std::string, int>> DFA::depth_limited_first_search(int specific_depth) {
-    std::vector<std::pair<std::string, int>> reached_states;
+std::vector<std::string> DFA::depth_limited_first_search(int specific_depth) {
+    std::vector<std::string> strings_states;
     std::deque<std::tuple<std::string, int, int>> stack;
 
     stack.emplace_front("", this->initial_state, 0);
@@ -23,11 +23,11 @@ std::vector<std::pair<std::string, int>> DFA::depth_limited_first_search(int spe
                 }
             }
         } else if (current_vertex_depth == specific_depth) {
-            reached_states.emplace_back(created_string, current_state);
+            strings_states.push_back(created_string);
         }
     }
 
-    return reached_states;
+    return strings_states;
 }
 
 bool DFA::is_string_accepted(std::string const &_string) {
@@ -38,4 +38,19 @@ bool DFA::is_string_accepted(std::string const &_string) {
     }
     auto final_states = &this->final_states;
     return std::find((*final_states).begin(), (*final_states).end(), current_state) != (*final_states).end();
+}
+
+
+std::vector<std::string> DFA::specific_length_strings(int _string_length) {
+    std::vector<std::string> specific_length_strings;
+
+    auto strings_states = this->depth_limited_first_search(_string_length);
+
+    for (const auto &_string: strings_states) {
+        if (this->is_string_accepted(_string)) {
+            specific_length_strings.push_back(_string);
+        }
+    }
+
+    return specific_length_strings;
 }
