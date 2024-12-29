@@ -1,5 +1,5 @@
-#ifndef PROJECT_1_DFA_DFA_H
-#define PROJECT_1_DFA_DFA_H
+#ifndef DFA_DFA_H
+#define DFA_DFA_H
 
 #include "finite_automata.h"
 #include <string>
@@ -8,9 +8,7 @@ class DFA : protected FiniteAutomata {
     using FiniteAutomata::FiniteAutomata;
 
 private:
-    std::vector<std::string> depth_limited_first_search(int max_depth);
-
-    std::vector<std::string> breadth_first_search();
+    std::vector<std::pair<std::string, int>> depth_limited_first_search(int max_depth);
 
 public:
 
