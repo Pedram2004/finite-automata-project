@@ -20,3 +20,24 @@ T FiniteAutomata<T>::transition_function(int _current_state, int _alphabet_lette
     return this->transition_graph[_current_state][_alphabet_letter];
 }
 
+// FiniteAutomata::string class Definition
+
+template<typename T>
+std::string FiniteAutomata<T>::string::get_internal_string() {
+        return this->internal_string;
+}
+
+template<typename T>
+int FiniteAutomata<T>::string::length() {
+        return this->internal_string.length();
+}
+
+template<typename T>
+bool FiniteAutomata<T>::string::operator<(const FiniteAutomata::string &other_string) const {
+        return this->internal_string.length() < other_string.internal_string.length();
+}
+
+template<typename T>
+typename FiniteAutomata<T>::string FiniteAutomata<T>::string::operator+(const char &character) const {
+        return string(this->internal_string + character);
+}

@@ -17,21 +17,13 @@ protected:
     public:
         explicit string(std::string _string) : internal_string(std::move(_string)) {};
 
-        std::string get_internal_string() {
-            return this->internal_string;
-        }
+        std::string get_internal_string();
 
-        int length() {
-            return this->internal_string.length();
-        }
+        int length();
 
-        bool operator<(string const &other_string) const {
-            return this->internal_string.length() < other_string.internal_string.length();
-        };
+        bool operator<(string const &other_string) const;
 
-        string operator+(char const &character) const {
-            return string(this->internal_string + character);
-        }
+        string operator+(char const &character) const;
     };
 
     int initial_state{}, alphabet_number{};
