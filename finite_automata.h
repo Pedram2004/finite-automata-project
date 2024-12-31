@@ -15,11 +15,23 @@ protected:
     private:
         std::string internal_string;
     public:
-        explicit string(std::string &_string) : internal_string(_string) {};
+        explicit string(std::string _string) : internal_string(std::move(_string)) {};
 
-        string operator<(string const &other_string) const {
-            return this->length() < other_string.length();
+        std::string get_internal_string() {
+            return this->internal_string;
+        }
+
+        int length() {
+            return this->internal_string.length();
+        }
+
+        bool operator<(string const &other_string) const {
+            return this->internal_string.length() < other_string.internal_string.length();
         };
+
+        string operator+(char const &character) const {
+            return string(this->internal_string + character);
+        }
     };
 
     int initial_state{}, alphabet_number{};
@@ -27,20 +39,11 @@ protected:
     std::map<int, std::vector<T>> transition_graph;
 
     FiniteAutomata(int _init_state, int _alphabet_number, std::set<int> &_final_states,
-                   std::map<int, std::vector<T>> &_transition_graph) {
-        this->initial_state = _init_state;
-        this->alphabet_number = _alphabet_number;
-        this->final_states = std::set<int>(_final_states);
-        this->transition_graph = std::map<int, std::vector<T>>(_transition_graph);
-    }
+                   std::map<int, std::vector<T>> &_transition_graph);
 
-    bool is_state_final(int _state) {
-        return this->final_states.count(_state);
-    }
+    bool is_state_final(int _state);
 
-    T transition_function(int _current_state, int _alphabet_letter) {
-        return this->transition_graph[_current_state][_alphabet_letter];
-    }
+    T transition_function(int _current_state, int _alphabet_letter);
 };
 
 #endif
