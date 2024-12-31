@@ -1,6 +1,7 @@
 #include "dfa.h"
 #include <deque>
 #include <limits>
+#include <algorithm>
 
 const int DFA::INFINITY = std::numeric_limits<int>::max();
 
@@ -12,16 +13,17 @@ bool DFA::is_string_accepted(std::string &_string) {
     return this->is_state_final(current_state);
 }
 
-std::vector<std::string>
+std::vector<FiniteAutomata<int>::string>
 DFA::strings_length_between(unsigned int lower_bound, unsigned int upper_bound, int max_result_num) {
-    std::vector<std::string> cumulated_strings;
-    auto search_queue = std::deque<std::pair<std::string, int>>{std::make_pair("", this->initial_state)};
+    std::vector<FiniteAutomata::string> cumulated_strings;
+    auto search_queue = std::deque<std::pair<FiniteAutomata::string, int>>{
+            std::make_pair(FiniteAutomata::string(""), this->initial_state)};
 
     while (!search_queue.empty()) {
-        std::pair<std::string, int> current_vertex = search_queue.front();
+        std::pair<FiniteAutomata::string, int> current_vertex = search_queue.front();
         search_queue.pop_front();
 
-        std::string current_string = current_vertex.first;
+        FiniteAutomata::string current_string = current_vertex.first;
         int current_state = current_vertex.second;
 
         if (current_string.length() < upper_bound) {
@@ -38,7 +40,7 @@ DFA::strings_length_between(unsigned int lower_bound, unsigned int upper_bound, 
             if (this->is_state_final(current_state)) {
                 cumulated_strings.push_back(current_string);
 
-                if (current_string.size() == max_result_num && max_result_num != -1) {
+                if (cumulated_strings.size() == max_result_num && max_result_num != -1) {
                     return cumulated_strings;
                 }
             }
@@ -57,10 +59,11 @@ std::vector<std::string> DFA::strings_accepted() {
 }
 
 std::string DFA::longest_string() {
-    return std::max(this->strings_length_between(0, DFA::INFINITY, -1).begin());
+    auto _strings_accepted = this->strings_length_between(0, DFA::INFINITY, -1);
+    auto v = std::max_element(_strings_accepted.begin(), strings_accepted().end());
 }
 
 std::string DFA::shortest_string() {
-    return *(this->strings_length_between(0, DFA::INFINITY, 1).begin());
+    return (this->strings_length_between(0, DFA::INFINITY, 1).begin())->get_internal_string();
 }
 

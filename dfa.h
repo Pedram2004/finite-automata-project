@@ -7,7 +7,7 @@ class DFA : protected FiniteAutomata<int> {
 private:
     static const int INFINITY;
 
-    std::vector<std::string>
+    std::vector<FiniteAutomata::string>
     strings_length_between(unsigned int lower_bound, unsigned int upper_bound, int max_result_num = -1);
 
 public:
