@@ -10,6 +10,8 @@ private:
     std::vector<FiniteAutomata::string>
     strings_length_between(unsigned int lower_bound, unsigned int upper_bound, int max_result_num = -1);
 
+    std::set<std::set<int>> procedure_mark();
+
 public:
 
     DFA(int _init_state, int _alphabet_number, std::set<int> &_final_states,
@@ -26,6 +28,8 @@ public:
     std::string longest_string();
 
     std::string shortest_string();
+
+    DFA minimize_dfa();
 };
 
 

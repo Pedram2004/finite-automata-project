@@ -68,3 +68,62 @@ std::string DFA::shortest_string() {
     return (this->strings_length_between(0, DFA::INFINITY, 1).begin())->get_internal_string();
 }
 
+// dfa minimization functions
+
+std::set<std::set<int>> DFA::procedure_mark() {
+    std::set<std::set<int>> unmarked_pairs;
+    for (const auto &key_value_1: this->transition_graph) {
+        int state1 = key_value_1.first;
+
+        for (const auto &key_value_2: this->transition_graph) {
+            int state2 = key_value_2.first;
+
+            if (state1 != state2) {
+
+                bool is_state1_final = this->is_state_final(key_value_1.first);
+                bool is_state2_final = this->is_state_final(key_value_2.first);
+
+                std::set<int> pair{state1, state2};
+
+                if ((is_state1_final && is_state2_final) ^ (!is_state1_final && !is_state2_final)) {
+                    unmarked_pairs.insert(pair);
+                }
+            }
+        }
+    }
+
+    bool no_marked_pairs = false;
+
+    while (!no_marked_pairs) {
+        no_marked_pairs = true;
+        auto set_iter = unmarked_pairs.begin();
+        while (set_iter != unmarked_pairs.end()) {
+            bool is_marked = false;
+            for (int i = 0; i < this->alphabet_number; i++) {
+                const std::set<int> &pair = *set_iter;
+                std::set<int> transitioned_pair{
+                        this->transition_function(*(pair.begin()), i),
+                        this->transition_function(*(++pair.begin()), i)
+                };
+
+                if (!unmarked_pairs.count(transitioned_pair)) {
+                    set_iter = unmarked_pairs.erase(set_iter);
+                    no_marked_pairs = false;
+                    is_marked = true;
+                    break;
+                }
+            }
+
+            if (is_marked) {
+                set_iter++;
+            }
+        }
+    }
+
+    return unmarked_pairs;
+}
+
+DFA DFA::minimize_dfa() {
+
+}
+
