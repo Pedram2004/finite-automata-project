@@ -15,6 +15,9 @@ protected:
     private:
         std::string internal_string;
     public:
+        static std::vector<std::string>
+        to_string_conversion(std::vector<FiniteAutomata<T>::string> const &FA_string_vector);
+
         explicit string(std::string _string) : internal_string(std::move(_string)) {};
 
         std::string get_internal_string();

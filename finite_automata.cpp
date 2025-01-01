@@ -23,21 +23,31 @@ T FiniteAutomata<T>::transition_function(int _current_state, int _alphabet_lette
 // FiniteAutomata::string class Definition
 
 template<typename T>
+std::vector<std::string>
+FiniteAutomata<T>::string::to_string_conversion(std::vector<FiniteAutomata<T>::string> const &FA_string_vector) {
+    std::vector<std::string> string_list;
+    for (FiniteAutomata::string FA_string: FA_string_vector) {
+        string_list.push_back(FA_string.get_internal_string());
+    }
+    return string_list;
+}
+
+template<typename T>
 std::string FiniteAutomata<T>::string::get_internal_string() {
-        return this->internal_string;
+    return std::string(this->internal_string);
 }
 
 template<typename T>
 int FiniteAutomata<T>::string::length() {
-        return this->internal_string.length();
+    return this->internal_string.length();
 }
 
 template<typename T>
-bool FiniteAutomata<T>::string::operator<(const FiniteAutomata::string &other_string) const {
-        return this->internal_string.length() < other_string.internal_string.length();
+bool FiniteAutomata<T>::string::operator<(const FiniteAutomata<T>::string &other_string) const {
+    return this->internal_string.length() < other_string.internal_string.length();
 }
 
 template<typename T>
 typename FiniteAutomata<T>::string FiniteAutomata<T>::string::operator+(const char &character) const {
-        return string(this->internal_string + character);
+    return string(this->internal_string + character);
 }

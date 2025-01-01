@@ -51,16 +51,17 @@ DFA::strings_length_between(unsigned int lower_bound, unsigned int upper_bound, 
 }
 
 std::vector<std::string> DFA::specific_length_strings(int _length) {
-    return this->strings_length_between(_length, _length, -1);
+    return FiniteAutomata::string::to_string_conversion(this->strings_length_between(_length, _length, -1));
 }
 
 std::vector<std::string> DFA::strings_accepted() {
-    return this->strings_length_between(0, DFA::INFINITY, 20);
+    return FiniteAutomata::string::to_string_conversion(this->strings_length_between(0, DFA::INFINITY, 20));
 }
 
 std::string DFA::longest_string() {
-    auto _strings_accepted = this->strings_length_between(0, DFA::INFINITY, -1);
-    auto v = std::max_element(_strings_accepted.begin(), strings_accepted().end());
+    std::vector<FiniteAutomata::string> _strings_accepted = this->strings_length_between(0, DFA::INFINITY, -1);
+    auto p_longest_string = std::max_element(_strings_accepted.begin(), _strings_accepted.end());
+    return p_longest_string->get_internal_string();
 }
 
 std::string DFA::shortest_string() {
