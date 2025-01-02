@@ -10,7 +10,9 @@ private:
     std::vector<FiniteAutomata::string>
     strings_length_between(unsigned int lower_bound, unsigned int upper_bound, int max_result_num = -1);
 
-    std::set<std::set<int>> procedure_mark();
+    const std::set<std::set<int>> * procedure_mark();
+
+    std::set<std::set<int>> partitioning(std::set<std::set<int>> const * _unmarked_pairs);
 
 public:
 

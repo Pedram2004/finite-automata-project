@@ -70,8 +70,8 @@ std::string DFA::shortest_string() {
 
 // dfa minimization functions
 
-std::set<std::set<int>> DFA::procedure_mark() {
-    std::set<std::set<int>> unmarked_pairs;
+const std::set<std::set<int>> *DFA::procedure_mark() {
+    auto unmarked_pairs = new std::set<std::set<int>>();
     for (const auto &key_value_1: this->transition_graph) {
         int state1 = key_value_1.first;
 
@@ -86,7 +86,7 @@ std::set<std::set<int>> DFA::procedure_mark() {
                 std::set<int> pair{state1, state2};
 
                 if ((is_state1_final && is_state2_final) ^ (!is_state1_final && !is_state2_final)) {
-                    unmarked_pairs.insert(pair);
+                    unmarked_pairs->insert(pair);
                 }
             }
         }
@@ -96,8 +96,8 @@ std::set<std::set<int>> DFA::procedure_mark() {
 
     while (!no_marked_pairs) {
         no_marked_pairs = true;
-        auto set_iter = unmarked_pairs.begin();
-        while (set_iter != unmarked_pairs.end()) {
+        auto set_iter = unmarked_pairs->begin();
+        while (set_iter != unmarked_pairs->end()) {
             bool is_marked = false;
             for (int i = 0; i < this->alphabet_number; i++) {
                 const std::set<int> &pair = *set_iter;
@@ -106,8 +106,8 @@ std::set<std::set<int>> DFA::procedure_mark() {
                         this->transition_function(*(++pair.begin()), i)
                 };
 
-                if (!unmarked_pairs.count(transitioned_pair)) {
-                    set_iter = unmarked_pairs.erase(set_iter);
+                if (!unmarked_pairs->count(transitioned_pair)) {
+                    set_iter = unmarked_pairs->erase(set_iter);
                     no_marked_pairs = false;
                     is_marked = true;
                     break;
@@ -123,7 +123,40 @@ std::set<std::set<int>> DFA::procedure_mark() {
     return unmarked_pairs;
 }
 
-DFA DFA::minimize_dfa() {
+std::set<std::set<int>> DFA::partitioning(const std::set<std::set<int>> *_unmarked_pairs) {
 
+    auto other_element = [](int _element, const std::set<int> &_pair) {
+        if (*(_pair.begin()) == _element) {
+            return *(_pair.end());
+        } else {
+            return *(_pair.begin());
+        }
+    };
+
+    std::set<int> visited_states;
+
+    auto find_pair = [&visited_states, &other_element, _unmarked_pairs](int _current_state) {
+        for (const std::set<int> &pair: *_unmarked_pairs) {
+            if (pair.count(_current_state)) {
+                int other_state = other_element(_current_state, pair);
+                if (!visited_states.count(other_state)) {
+                    return other_state;
+                }
+            }
+        }
+        return -1;
+    };
+
+    for (const auto &pair_iter: this->transition_graph) {
+        int current_state = pair_iter.first;
+
+        if (!visited_states.count(current_state)) {
+
+        }
+    }
 }
 
+DFA DFA::minimize_dfa() {
+    const std::set<std::set<int>> *indistinguishable_pairs = this->procedure_mark();
+
+}
