@@ -10,7 +10,13 @@ private:
     std::vector<FiniteAutomata::string>
     strings_length_between(unsigned int lower_bound, unsigned int upper_bound, int max_result_num = -1);
 
-    std::set<std::set<int>> procedure_mark();
+    const std::set<std::set<int>> * procedure_mark();
+
+    std::set<std::pair<std::set<int>, bool>> partitioning(std::set<std::set<int>> const * _unmarked_pairs);
+
+    static int find_state(int state_wanted, const std::map<int, std::set<int>> &_new_old_states);
+
+    std::map<int, std::vector<int>> creating_new_transition_graph(const std::map<int, std::set<int>> &_new_old_states);
 
 public:
 
