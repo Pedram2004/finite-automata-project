@@ -1,4 +1,5 @@
 #include "finite_automata.h"
+#include <iostream>
 
 template<typename T>
 FiniteAutomata<T>::FiniteAutomata(int _init_state, int _alphabet_number, std::set<int> &_final_states,
@@ -26,6 +27,7 @@ template<typename T>
 std::vector<std::string>
 FiniteAutomata<T>::string::to_string_conversion(std::vector<FiniteAutomata<T>::string> const &FA_string_vector) {
     std::vector<std::string> string_list;
+    string_list.reserve(FA_string_vector.size());
     for (FiniteAutomata::string FA_string: FA_string_vector) {
         string_list.push_back(FA_string.get_internal_string());
     }
@@ -51,3 +53,6 @@ template<typename T>
 typename FiniteAutomata<T>::string FiniteAutomata<T>::string::operator+(const char &character) const {
     return string(this->internal_string + character);
 }
+
+template
+class FiniteAutomata<int>;

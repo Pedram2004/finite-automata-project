@@ -2,13 +2,14 @@
 #include <deque>
 #include <limits>
 #include <algorithm>
+#include <iostream>
 
 const int DFA::INFINITY = std::numeric_limits<int>::max();
 
 bool DFA::is_string_accepted(std::string &_string) {
     int current_state = this->initial_state;
     for (char letter: _string) {
-        current_state = this->transition_function(current_state, letter);
+        current_state = this->transition_function(current_state, letter - '0');
     }
     return this->is_state_final(current_state);
 }
@@ -28,15 +29,17 @@ DFA::strings_length_between(unsigned int lower_bound, unsigned int upper_bound, 
 
         if (current_string.length() < upper_bound) {
             for (int i = 0; i < this->alphabet_number; i++) {
-                auto child_vertex = std::make_pair(current_string + (char) ('0' + i),
-                                                   this->transition_function(current_state, i));
+                auto child_vertex = std::make_pair(
+                        current_string + (char) ('0' + i),
+                        this->transition_function(current_state, i));
 
                 if (current_state != child_vertex.second) {
-                    search_queue.push_back(current_vertex);
+                    search_queue.push_back(child_vertex);
                 }
             }
+        }
 
-        } else if (lower_bound <= current_string.length() <= upper_bound) {
+        if (lower_bound <= current_string.length() && current_string.length() <= upper_bound) {
             if (this->is_state_final(current_state)) {
                 cumulated_strings.push_back(current_string);
 
@@ -45,7 +48,6 @@ DFA::strings_length_between(unsigned int lower_bound, unsigned int upper_bound, 
                 }
             }
         }
-
     }
     return cumulated_strings;
 }
@@ -165,7 +167,7 @@ std::set<std::pair<std::set<int>, bool>> DFA::partitioning(const std::set<std::s
 }
 
 int DFA::find_state(int state_wanted, const std::map<int, std::set<int>> &_new_old_states) {
-    for (const auto & _new_old_state : _new_old_states) {
+    for (const auto &_new_old_state: _new_old_states) {
         if (_new_old_state.second.count(state_wanted)) {
             return _new_old_state.first;
         }
@@ -174,7 +176,7 @@ int DFA::find_state(int state_wanted, const std::map<int, std::set<int>> &_new_o
 }
 
 std::map<int, std::vector<int>>
-DFA::creating_new_transition_graph(const std::map<int, std::set<int>>& _new_old_states) {
+DFA::creating_new_transition_graph(const std::map<int, std::set<int>> &_new_old_states) {
     std::map<int, std::vector<int>> new_transition_graph;
 
 
@@ -210,5 +212,6 @@ DFA DFA::minimize_dfa() {
 
     auto new_transition_graph = this->creating_new_transition_graph(new_old_states);
 
-    return {DFA(DFA::find_state(this->initial_state, new_old_states), this->alphabet_number, new_final_states, new_transition_graph)};
+    return {DFA(DFA::find_state(this->initial_state, new_old_states), this->alphabet_number, new_final_states,
+                new_transition_graph)};
 }

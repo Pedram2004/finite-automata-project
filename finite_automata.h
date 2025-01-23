@@ -27,6 +27,12 @@ protected:
         bool operator<(string const &other_string) const;
 
         string operator+(char const &character) const;
+
+        friend std::ostream& operator<<(std::ostream& output_stream, const string &_string)
+        {
+            output_stream << _string.internal_string;
+            return output_stream;
+        }
     };
 
     int initial_state{}, alphabet_number{};
