@@ -74,7 +74,7 @@ std::string DFA::shortest_string() {
 
 const std::set<std::set<int>> *DFA::procedure_mark() {
     int number_of_states = (int) this->transition_graph.size();
-    auto marked_matrix = std::vector<std::vector<bool>> (number_of_states, std::vector<bool> (number_of_states, false));
+    auto marked_matrix = std::vector<std::vector<bool>>(number_of_states, std::vector<bool>(number_of_states, false));
 
     for (const auto &key_value_1: this->transition_graph) {
         int state2 = key_value_1.first;
@@ -93,9 +93,10 @@ const std::set<std::set<int>> *DFA::procedure_mark() {
         }
     }
 
-    bool marked_entry = true;
-    while(marked_entry) {
 
+    bool marked_entry = true;
+
+    while (marked_entry) {
         marked_entry = false;
         for (int column = 0; column < number_of_states; column++) {
 
@@ -105,13 +106,13 @@ const std::set<std::set<int>> *DFA::procedure_mark() {
                     int new_state1 = this->transition_function(column, letter);
                     int new_state2 = this->transition_function(row, letter);
 
-                    if (new_state2 < new_state1) {
+                    if (new_state2 > new_state1) {
                         int temp = new_state1;
                         new_state1 = new_state2;
                         new_state2 = temp;
                     }
 
-                    if (marked_matrix[new_state1][new_state2]) {
+                    if (marked_matrix[new_state1][new_state2] && !marked_matrix[row][column]) {
                         marked_matrix[row][column] = true;
                         marked_entry = true;
                     }
@@ -127,7 +128,7 @@ const std::set<std::set<int>> *DFA::procedure_mark() {
     for (int column = 0; column < number_of_states; column++) {
         for (int row = column + 1; row < number_of_states; row++) {
             if (!marked_matrix[row][column]) {
-                unmarked_pairs->insert(std::set<int> {row, column});
+                unmarked_pairs->insert(std::set<int>{row, column});
             }
         }
     }
@@ -153,7 +154,7 @@ std::set<std::pair<std::set<int>, bool>> DFA::partitioning(const std::set<std::s
         int current_state = pair_iter.first;
 
         if (!visited_states.count(current_state)) {
-            std::set<int> new_state;
+            std::set<int> new_state = std::set<int> {current_state};
             bool is_new_state_final = this->is_state_final(current_state);
 
             for (const auto &pair: *_unmarked_pairs) {
@@ -208,7 +209,6 @@ DFA DFA::minimize_dfa() {
 
     std::map<int, std::set<int>> new_old_states;
     std::set<int> new_final_states;
-
 
     int new_state_number = 0;
     for (const auto &state_type_pair: partitions) {
