@@ -54,5 +54,10 @@ typename FiniteAutomata<T>::string FiniteAutomata<T>::string::operator+(const ch
     return string(this->internal_string + character);
 }
 
+// for compile process
+
 template
 class FiniteAutomata<int>;
+
+template
+class FiniteAutomata<std::set<int>>;
