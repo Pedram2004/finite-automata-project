@@ -73,52 +73,61 @@ std::string DFA::shortest_string() {
 // dfa minimization functions
 
 const std::set<std::set<int>> *DFA::procedure_mark() {
-    auto unmarked_pairs = new std::set<std::set<int>>();
+    int number_of_states = (int) this->transition_graph.size();
+    auto marked_matrix = std::vector<std::vector<bool>> (number_of_states, std::vector<bool> (number_of_states, false));
+
     for (const auto &key_value_1: this->transition_graph) {
-        int state1 = key_value_1.first;
+        int state2 = key_value_1.first;
 
         for (const auto &key_value_2: this->transition_graph) {
-            int state2 = key_value_2.first;
+            int state1 = key_value_2.first;
 
-            if (state1 != state2) {
-
+            if (state1 < state2) {
                 bool is_state1_final = this->is_state_final(key_value_1.first);
                 bool is_state2_final = this->is_state_final(key_value_2.first);
 
-                std::set<int> pair{state1, state2};
-
-                if ((is_state1_final && is_state2_final) ^ (!is_state1_final && !is_state2_final)) {
-                    unmarked_pairs->insert(pair);
+                if (is_state1_final ^ is_state2_final) {
+                    marked_matrix[state2][state1] = true;
                 }
             }
         }
     }
 
-    bool no_marked_pairs = false;
+    bool marked_entry = true;
+    while(marked_entry) {
 
-    while (!no_marked_pairs) {
-        no_marked_pairs = true;
-        auto set_iter = unmarked_pairs->begin();
-        while (set_iter != unmarked_pairs->end()) {
-            bool is_marked = false;
-            for (int i = 0; i < this->alphabet_number; i++) {
-                const std::set<int> &pair = *set_iter;
-                std::set<int> transitioned_pair{
-                        this->transition_function(*(pair.begin()), i),
-                        this->transition_function(*(++pair.begin()), i)
-                };
+        marked_entry = false;
+        for (int column = 0; column < number_of_states; column++) {
 
-                if (!unmarked_pairs->count(transitioned_pair) &&
-                    (*transitioned_pair.begin() != *(++transitioned_pair.begin()))) {
-                    set_iter = unmarked_pairs->erase(set_iter);
-                    no_marked_pairs = false;
-                    is_marked = true;
-                    break;
+            for (int row = column + 1; row < number_of_states; row++) {
+
+                for (int letter = 0; letter < this->alphabet_number; letter++) {
+                    int new_state1 = this->transition_function(column, letter);
+                    int new_state2 = this->transition_function(row, letter);
+
+                    if (new_state2 < new_state1) {
+                        int temp = new_state1;
+                        new_state1 = new_state2;
+                        new_state2 = temp;
+                    }
+
+                    if (marked_matrix[new_state1][new_state2]) {
+                        marked_matrix[row][column] = true;
+                        marked_entry = true;
+                    }
                 }
             }
+        }
 
-            if (is_marked) {
-                set_iter++;
+
+    }
+
+    auto unmarked_pairs = new std::set<std::set<int>>();
+
+    for (int column = 0; column < number_of_states; column++) {
+        for (int row = column + 1; row < number_of_states; row++) {
+            if (!marked_matrix[row][column]) {
+                unmarked_pairs->insert(std::set<int> {row, column});
             }
         }
     }
