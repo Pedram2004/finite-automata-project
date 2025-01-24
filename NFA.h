@@ -20,6 +20,13 @@ private:
                         std::map<std::set<int>, int> &_rename_table);
 
 public:
+
+    NFA(int _init_state, int _alphabet_number, std::set<int> &_final_states,
+        std::map<int, std::vector<std::set<int>>> &_transition_graph) : FiniteAutomata<std::set<int>>(_init_state,
+                                                                                                      _alphabet_number,
+                                                                                                      _final_states,
+                                                                                                      _transition_graph) {};
+
     DFA convert_to_dfa();
 
 };
