@@ -2,6 +2,7 @@
 #include <deque>
 #include <limits>
 #include <algorithm>
+#include <iostream>
 
 const int DFA::INFINITY = std::numeric_limits<int>::max();
 
@@ -222,4 +223,26 @@ DFA DFA::minimize_dfa() {
 
     return {DFA(DFA::find_state(this->initial_state, new_old_states), this->alphabet_number, new_final_states,
                 new_transition_graph)};
+}
+
+std::ostream& operator<<(std::ostream& os, const DFA& dfa) {
+
+    os << "Initial state: " << dfa.initial_state << std::endl;
+
+    os << "Final states: ";
+    for (const int& final_state : dfa.final_states) {
+        os << final_state << " ";
+    }
+    os << std::endl;
+
+    os << "Transition graph: " << std::endl;
+    for (const auto& transition : dfa.transition_graph) {
+        os << "State " << transition.first << ": ";
+        for (const int& next_state : transition.second) {
+            os << next_state << " ";
+        }
+        os << std::endl;
+    }
+
+    return os;
 }

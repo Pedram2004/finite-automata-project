@@ -1,6 +1,7 @@
 #ifndef DFA_DFA_H
 #define DFA_DFA_H
 
+// #include <iostream>
 #include "finite_automata.h"
 
 class DFA : protected FiniteAutomata<int> {
@@ -36,6 +37,9 @@ public:
     std::string shortest_string();
 
     DFA minimize_dfa();
+
+    friend std::ostream& operator<<(std::ostream& os, const DFA& dfa);
+
 };
 
 

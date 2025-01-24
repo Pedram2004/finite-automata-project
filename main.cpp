@@ -46,5 +46,8 @@ int main() {
     T5[2] = std::vector<std::set<int>> {empty_set, empty_set, empty_set};
     NFA M5 = NFA(0, 2, F5, T5);
     DFA dfa_M5 = M5.convert_to_dfa();
+
+    std::cout << dfa_M5 << std::endl;
+    
     return 0;
 }
