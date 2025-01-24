@@ -1,5 +1,4 @@
 #include "finite_automata.h"
-#include <iostream>
 
 template<typename T>
 FiniteAutomata<T>::FiniteAutomata(int _init_state, int _alphabet_number, std::set<int> &_final_states,

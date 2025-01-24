@@ -225,24 +225,24 @@ DFA DFA::minimize_dfa() {
                 new_transition_graph)};
 }
 
-std::ostream& operator<<(std::ostream& os, const DFA& dfa) {
+std::ostream& operator<<(std::ostream& output, const DFA& dfa) {
 
-    os << "Initial state: " << dfa.initial_state << std::endl;
+    output << "Initial State: " << dfa.initial_state << "\n";
 
-    os << "Final states: ";
+    output << "Final States: ";
     for (const int& final_state : dfa.final_states) {
-        os << final_state << " ";
+        output << final_state << ", ";
     }
-    os << std::endl;
+    output << "\n";
 
-    os << "Transition graph: " << std::endl;
+    output << "Transition Graph: " << "\n";
     for (const auto& transition : dfa.transition_graph) {
-        os << "State " << transition.first << ": ";
+        output << "State " << transition.first << " : ";
         for (const int& next_state : transition.second) {
-            os << next_state << " ";
+            output << next_state << ", ";
         }
-        os << std::endl;
+        output << "\n";
     }
 
-    return os;
+    return output;
 }
