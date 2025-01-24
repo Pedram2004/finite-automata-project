@@ -2,7 +2,6 @@
 #include <deque>
 #include <limits>
 #include <algorithm>
-#include <iostream>
 
 const int DFA::INFINITY = std::numeric_limits<int>::max();
 
