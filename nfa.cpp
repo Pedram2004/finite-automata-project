@@ -1,4 +1,4 @@
-#include "NFA.h"
+#include "nfa.h"
 #include <deque>
 
 std::set<int> NFA::create_initial_state() {
