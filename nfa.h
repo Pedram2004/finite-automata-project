@@ -19,8 +19,6 @@ private:
     add_to_rename_table(const std::set<int> &_state, int &_new_state_name, std::set<std::set<int>> &_added_states,
                         std::map<std::set<int>, int> &_rename_table);
 
-    static void print_set(std::set<int> _set);
-
 public:
 
     NFA(int _init_state, int _alphabet_number, std::set<int> &_final_states,
